@@ -1,11 +1,14 @@
 package br.alura.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 import br.alura.R;
 import br.alura.dao.AlunoDAO;
@@ -26,6 +29,14 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         inicializacaoDosCampos();
         setTitle(TITULO_APPBAR);
         configuraBotaoSalvar();
+
+        Intent dados = getIntent();
+        Aluno aluno = (Aluno) dados.getSerializableExtra("aluno");
+        if(Objects.nonNull(aluno)) {
+            campoNome.setText(aluno.getNome());
+            campoEmail.setText(aluno.getEmail());
+            campoTelefone.setText(aluno.getTelefone());
+        }
     }
 
     private void configuraBotaoSalvar() {
