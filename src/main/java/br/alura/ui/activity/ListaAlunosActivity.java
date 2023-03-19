@@ -14,24 +14,36 @@ import br.alura.R;
 import br.alura.dao.AlunoDAO;
 
 public class ListaAlunosActivity extends AppCompatActivity {
+
+    public static final String TITULO_APPBAR = "Lista de alunos";
+
+    private final AlunoDAO dao = new AlunoDAO();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
+        setTitle(TITULO_APPBAR);
+        configuraFabNovoAluno();
+    }
 
-        setTitle("Lista de alunos");
-
+    private void configuraFabNovoAluno() {
         FloatingActionButton botaoNovoALuno = findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
-        botaoNovoALuno.setOnClickListener(view -> startActivity(new Intent(
-                        ListaAlunosActivity.this, FormularioAlunoActivity.class
-                ))
-        );
+        botaoNovoALuno.setOnClickListener(view -> abreFormularioAluno());
+    }
+
+    public void abreFormularioAluno() {
+        startActivity(new Intent(
+                this, FormularioAlunoActivity.class));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        AlunoDAO dao = new AlunoDAO();
+        configuraLista();
+    }
+
+    private void configuraLista() {
         ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
         listaDeAlunos.setAdapter(new ArrayAdapter<>(
                 this,
