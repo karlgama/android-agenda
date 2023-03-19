@@ -28,18 +28,15 @@ public class FormularioAlunoActivity extends AppCompatActivity {
 
 
         Button botaoSalvar = findViewById(R.id.activity_formulario_aluno_botao_salvar);
-        botaoSalvar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                String nome = campoNome.getText().toString();
-                String telefone = campoTelefone.getText().toString();
-                String email = campoEmail.getText().toString();
+        botaoSalvar.setOnClickListener(view -> {
+            String nome = campoNome.getText().toString();
+            String telefone = campoTelefone.getText().toString();
+            String email = campoEmail.getText().toString();
 
-                Aluno alunoCriado = new Aluno(nome, telefone, email);
-                dao.salva(alunoCriado);
+            Aluno alunoCriado = new Aluno(nome, telefone, email);
+            dao.salva(alunoCriado);
 
-                startActivity(new Intent(FormularioAlunoActivity.this,
-                        ListaAlunosActivity.class));
-            }
+            finish();
         });
     }
 }
