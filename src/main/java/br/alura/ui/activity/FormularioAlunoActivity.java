@@ -17,6 +17,8 @@ import br.alura.model.Aluno;
 public class FormularioAlunoActivity extends AppCompatActivity {
 
     public static final String TITULO_APPBAR = "Novo Aluno";
+
+    private Aluno aluno;
     private EditText campoNome;
     private EditText campoEmail;
     private EditText campoTelefone;
@@ -31,7 +33,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        Aluno aluno = (Aluno) dados.getSerializableExtra("aluno");
+        aluno = (Aluno) dados.getSerializableExtra("aluno");
         if(Objects.nonNull(aluno)) {
             campoNome.setText(aluno.getNome());
             campoEmail.setText(aluno.getEmail());
@@ -42,8 +44,9 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     private void configuraBotaoSalvar() {
         Button botaoSalvar = findViewById(R.id.activity_formulario_aluno_botao_salvar);
         botaoSalvar.setOnClickListener(view -> {
-            Aluno alunoCriado = criaAluno();
-            salva(alunoCriado);
+            preencheAluno();
+            dao.edita(aluno);
+            finish();
         });
     }
 
@@ -53,13 +56,13 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         campoTelefone = findViewById(R.id.activity_formulario_aluno_telefone);
     }
 
-    @NonNull
-    private Aluno criaAluno() {
+    private void preencheAluno() {
         String nome = campoNome.getText().toString();
         String telefone = campoTelefone.getText().toString();
         String email = campoEmail.getText().toString();
-
-        return new Aluno(nome, telefone, email);
+        aluno.setNome(nome);
+        aluno.setEmail(email);
+        aluno.setTelefone(telefone);
     }
 
     private void salva(Aluno aluno) {
