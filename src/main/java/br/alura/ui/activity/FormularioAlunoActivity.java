@@ -33,19 +33,23 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        aluno = (Aluno) dados.getSerializableExtra("aluno");
-        if(Objects.nonNull(aluno)) {
+        if(dados.hasExtra("aluno")) {
+            aluno = (Aluno) dados.getSerializableExtra("aluno");
             campoNome.setText(aluno.getNome());
             campoEmail.setText(aluno.getEmail());
             campoTelefone.setText(aluno.getTelefone());
-        }
+        }else
+            aluno = new Aluno();
     }
 
     private void configuraBotaoSalvar() {
         Button botaoSalvar = findViewById(R.id.activity_formulario_aluno_botao_salvar);
         botaoSalvar.setOnClickListener(view -> {
             preencheAluno();
-            dao.edita(aluno);
+            if(aluno.temIdValido())
+                dao.edita(aluno);
+            else
+                dao.salva(aluno);
             finish();
         });
     }
@@ -67,7 +71,6 @@ public class FormularioAlunoActivity extends AppCompatActivity {
 
     private void salva(Aluno aluno) {
         dao.salva(aluno);
-        finish();
     }
 
 }

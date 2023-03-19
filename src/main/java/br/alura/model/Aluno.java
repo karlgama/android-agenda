@@ -9,6 +9,11 @@ public class Aluno implements Serializable {
     private String nome;
     private String telefone;
     private String email;
+
+    public Aluno() {
+
+    }
+
     public String getNome() {
         return nome;
     }
@@ -51,5 +56,9 @@ public class Aluno implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean temIdValido() {
+        return this.id >0;
     }
 }
