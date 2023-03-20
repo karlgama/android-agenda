@@ -1,14 +1,13 @@
 package br.alura.ui.activity;
 
+import static br.alura.ui.activity.ConstantesActivities.CHAVE_ALUNO;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +23,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     public static final String TITULO_APPBAR = "Lista de alunos";
 
+
     private final AlunoDAO dao = new AlunoDAO();
 
     @Override
@@ -36,10 +36,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     private void configuraFabNovoAluno() {
         FloatingActionButton botaoNovoALuno = findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
-        botaoNovoALuno.setOnClickListener(view -> abreFormularioAluno());
+        botaoNovoALuno.setOnClickListener(view -> abreFormularioModoInsereAluno());
     }
 
-    public void abreFormularioAluno() {
+    public void abreFormularioModoInsereAluno() {
         startActivity(new Intent(
                 this, FormularioAlunoActivity.class));
     }
@@ -53,15 +53,30 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configuraLista() {
         ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
         final List<Aluno> alunos = dao.getAlunos();
-        listaDeAlunos.setAdapter(new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                alunos));
+        listaDeAlunos.setAdapter(configuraAdapter(alunos));
+        configuraListenerDeCliquePorItem(listaDeAlunos);
+    }
+
+    private void configuraListenerDeCliquePorItem(ListView listaDeAlunos) {
         listaDeAlunos.setOnItemClickListener((adapterView, view, indice, id) -> {
-            Aluno aluno = alunos.get(indice);
-            Intent vaiParaFormulario = new Intent(ListaAlunosActivity.this,FormularioAlunoActivity.class);
-            vaiParaFormulario.putExtra("aluno",aluno);
+            Aluno aluno = (Aluno) adapterView.getItemAtPosition(indice);
+            Intent vaiParaFormulario = abreFormularioModoEditaAluno();
+            vaiParaFormulario.putExtra(CHAVE_ALUNO, aluno);
             startActivity(vaiParaFormulario);
         });
+    }
+
+    @NonNull
+    private Intent abreFormularioModoEditaAluno() {
+        return new Intent(this,
+                FormularioAlunoActivity.class);
+    }
+
+    @NonNull
+    private ArrayAdapter<Aluno> configuraAdapter(List<Aluno> alunos) {
+        return new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                alunos);
     }
 }
