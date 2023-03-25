@@ -4,6 +4,10 @@ import static br.alura.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -32,7 +36,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
         setTitle(TITULO_APPBAR);
-
         configuraLista();
         configuraFabNovoAluno();
     }
@@ -40,6 +43,20 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configuraFabNovoAluno() {
         FloatingActionButton botaoNovoALuno = findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
         botaoNovoALuno.setOnClickListener(view -> abreFormularioModoInsereAluno());
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Aluno aluno = adapter.getItem(menuInfo.position);
+        remove(aluno);
+        return super.onContextItemSelected(item);
     }
 
     public void abreFormularioModoInsereAluno() {
@@ -62,16 +79,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
         ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
         configuraAdapter(listaDeAlunos);
         configuraListenerDeCliquePorItem(listaDeAlunos);
-        configuraListenerDeCliqueLongPorItem(listaDeAlunos);
+        registerForContextMenu(listaDeAlunos);
     }
 
-    private void configuraListenerDeCliqueLongPorItem(ListView listaDeAlunos) {
-        listaDeAlunos.setOnItemLongClickListener((adapterView, view, indice, l) -> {
-            Aluno aluno = (Aluno) adapterView.getItemAtPosition(indice);
-            remove(aluno);
-            return true;
-        });
-    }
 
     private void remove(Aluno aluno) {
         dao.remove(aluno);
