@@ -25,12 +25,15 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
 
     private final AlunoDAO dao = new AlunoDAO();
+    private ArrayAdapter<Aluno> adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
         setTitle(TITULO_APPBAR);
+
+        configuraLista();
         configuraFabNovoAluno();
     }
 
@@ -47,14 +50,32 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        configuraLista();
+        atualizaAlunos();
+    }
+
+    private void atualizaAlunos() {
+        adapter.clear();
+        adapter.addAll(dao.getAlunos());
     }
 
     private void configuraLista() {
         ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
-        final List<Aluno> alunos = dao.getAlunos();
-        listaDeAlunos.setAdapter(configuraAdapter(alunos));
+        configuraAdapter(listaDeAlunos);
         configuraListenerDeCliquePorItem(listaDeAlunos);
+        configuraListenerDeCliqueLongPorItem(listaDeAlunos);
+    }
+
+    private void configuraListenerDeCliqueLongPorItem(ListView listaDeAlunos) {
+        listaDeAlunos.setOnItemLongClickListener((adapterView, view, indice, l) -> {
+            Aluno aluno = (Aluno) adapterView.getItemAtPosition(indice);
+            remove(aluno);
+            return true;
+        });
+    }
+
+    private void remove(Aluno aluno) {
+        dao.remove(aluno);
+        adapter.remove(aluno);
     }
 
     private void configuraListenerDeCliquePorItem(ListView listaDeAlunos) {
@@ -73,10 +94,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private ArrayAdapter<Aluno> configuraAdapter(List<Aluno> alunos) {
-        return new ArrayAdapter<>(
+    private void configuraAdapter(ListView listaDeAlunos) {
+        adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1,
-                alunos);
+                android.R.layout.simple_list_item_1);
+        listaDeAlunos.setAdapter(adapter);
     }
 }
