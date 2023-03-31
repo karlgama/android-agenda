@@ -5,10 +5,13 @@ import static br.alura.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.alura.R;
@@ -39,7 +43,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         configuraLista();
         configuraFabNovoAluno();
         for (int i = 0; i < 2; i++) {
-            dao.salva(new Aluno("Teste"+i,"124313431","teste@teste.com"));
+            dao.salva(new Aluno("Teste" + i, "124313431", "teste@teste.com"));
         }
     }
 
@@ -57,7 +61,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.activity_lista_alunos_menu_remover){
+        if (id == R.id.activity_lista_alunos_menu_remover) {
             AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             Aluno aluno = adapter.getItem(menuInfo.position);
             remove(aluno);
@@ -114,7 +118,32 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configuraAdapter(ListView listaDeAlunos) {
         adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1);
-        listaDeAlunos.setAdapter(adapter);
+                R.layout.item_aluno
+        );
+        listaDeAlunos.setAdapter(new BaseAdapter() {
+            private final List<Aluno> alunos = new ArrayList<>();
+
+            @Override
+            public int getCount() {
+                return alunos.size();
+            }
+
+            @Override
+            public Aluno getItem(int i) {
+                return alunos.get(i);
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return alunos.get(i).getId();
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                return LayoutInflater
+                        .from(ListaAlunosActivity.this)
+                        .inflate(R.layout.item_aluno, viewGroup);
+            }
+        });
     }
 }
