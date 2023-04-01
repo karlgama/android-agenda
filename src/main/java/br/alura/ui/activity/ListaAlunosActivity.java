@@ -77,8 +77,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     private void atualizaAlunos() {
-        adapter.clear();
-        adapter.addAll(dao.getAlunos());
+        adapter.atualiza(dao.getAlunos());
     }
 
     private void configuraLista() {
