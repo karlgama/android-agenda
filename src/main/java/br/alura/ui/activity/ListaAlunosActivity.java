@@ -2,6 +2,9 @@ package br.alura.ui.activity;
 
 import static br.alura.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -37,9 +40,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         setTitle(TITULO_APPBAR);
         configuraLista();
         configuraFabNovoAluno();
-        for (int i = 0; i < 2; i++) {
-            dao.salva(new Aluno("Teste" + i, "124313431", "teste@teste.com"));
-        }
     }
 
     private void configuraFabNovoAluno() {
@@ -56,13 +56,25 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.activity_lista_alunos_menu_remover) {
-            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno aluno = adapter.getItem(menuInfo.position);
-            remove(aluno);
-        }
+        if (id == R.id.activity_lista_alunos_menu_remover)
+            confirmaRemocao(item);
 
         return super.onContextItemSelected(item);
+    }
+
+    private void confirmaRemocao(@NonNull final MenuItem item) {
+        new AlertDialog
+                .Builder(this)
+                .setTitle("Removendo aluno")
+                .setMessage("Tem certeza que quer remover o aluno?")
+                .setPositiveButton("Sim", (dialogInterface, i) -> {
+                    AdapterView.AdapterContextMenuInfo menuInfo =
+                            (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                    Aluno aluno = adapter.getItem(menuInfo.position);
+                    remove(aluno);
+                })
+                .setNegativeButton("Não",null)
+                .show();
     }
 
     public void abreFormularioModoInsereAluno() {
