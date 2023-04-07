@@ -7,20 +7,25 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import br.alura.dao.AlunoDAO;
+import br.alura.dao.RoomAlunoDao;
+import br.alura.database.AgendaDatabase;
 import br.alura.model.Aluno;
 import br.alura.ui.adapter.ListaAlunosAdapter;
 
 public class ListaAlunosView {
-    private final AlunoDAO dao;
+    private final RoomAlunoDao dao;
     private final ListaAlunosAdapter adapter;
     private final Context context;
 
     public ListaAlunosView(Context context) {
         this.context = context;
         adapter = new ListaAlunosAdapter(context);
-         dao = new AlunoDAO();
+        dao = Room.databaseBuilder(context, AgendaDatabase.class,"agenda.db").build()
+                .getRoomAlunoDao();
     }
 
     public void confirmaRemocao(@NonNull final MenuItem item) {
