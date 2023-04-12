@@ -16,6 +16,18 @@ public class Aluno implements Serializable {
     private String telefone;
     private String email;
 
+    private String sobrenome;
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+
+
+
     public Aluno() {
 
     }

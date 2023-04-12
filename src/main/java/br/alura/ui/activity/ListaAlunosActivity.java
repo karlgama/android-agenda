@@ -22,7 +22,7 @@ import br.alura.ui.ListaAlunosView;
 public class ListaAlunosActivity extends AppCompatActivity {
 
     public static final String TITULO_APPBAR = "Lista de alunos";
-    private final ListaAlunosView listaAlunosView = new ListaAlunosView(this);
+    private ListaAlunosView listaAlunosView;
 
 
     @Override
@@ -30,6 +30,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
         setTitle(TITULO_APPBAR);
+        listaAlunosView= new ListaAlunosView(this);
         configuraLista();
         configuraFabNovoAluno();
     }
@@ -90,8 +91,4 @@ public class ListaAlunosActivity extends AppCompatActivity {
         return new Intent(this,
                 FormularioAlunoActivity.class);
     }
-
-
-
-
 }
