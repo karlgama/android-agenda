@@ -80,4 +80,8 @@ public class Aluno implements Serializable {
     public boolean temIdValido() {
         return this.id >0;
     }
+
+    public String getNomeCompleto() {
+        return nome+" "+sobrenome;
+    }
 }
